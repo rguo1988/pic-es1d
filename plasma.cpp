@@ -170,11 +170,6 @@ void PlasmaSystem::PrintParameters() const
     cout << "--------------------------------------------" << endl;
     cout << "PIC Simulation Start!" << endl;
     cout << "--------------------------------------------" << endl;
-    if(!if_continued)
-        cout << "Evolving from a NEW initial state!" << endl;
-    else
-        cout << "Evolving from a CONTINUED state!" << endl;
-    cout << "--------------------------------------------" << endl;
     cout << "Simulation Parameters:" << endl;
     cout << setw(10) << "Length"
          << setw(15) << "Grids Num"
@@ -196,6 +191,11 @@ void PlasmaSystem::PrintParameters() const
          << setw(15) << maxsteps*timestep_condition
          << setw(15) << maxsteps*timestep_condition + time_ran << endl;
     cout << "--------------------------------------------" << endl;
+    if(grid_width > lambda_D)
+    {
+        cout << "WARNING: DebyeL is NOT satisfied!" << endl;
+        cout << "--------------------------------------------" << endl;
+    }
     for(auto particles_a : species)
     {
         cout << "Species: " << particles_a.name << endl;
@@ -204,8 +204,13 @@ void PlasmaSystem::PrintParameters() const
               << setw(10) << "m = " << particles_a.m << endl;
     }
     cout << "--------------------------------------------" << endl;
-    if(grid_width > lambda_D)
-        cout << "<DebyeL is NOT satisfied!" << endl;
+    cout << "Data: " << endl;
+    if(!if_continued)
+        cout << "Evolving from a NEW initial state!" << endl;
+    else
+        cout << "Evolving from a CONTINUED state!" << endl;
+    cout << "data_num = " << data_num << endl;
+    cout << "--------------------------------------------" << endl;
 
 }
 

@@ -12,7 +12,7 @@ using namespace std;
 void Input::PrintSpecialInformation()
 {
     cout << "This is the code simulated the formation of kappa plasma!" << endl;
-    cout << "Uae =" << uae << " Uai= " << uai << endl;
+    cout << "Uae = " << uae << " Uai = " << uai << endl;
 }
 double Input::GetElecInitDistrib(double x, double v)
 {
