@@ -8,7 +8,7 @@ class UniversalParameters
 {
   protected:
     //if the simulation continued from last calculation
-    const bool if_continued = 0;
+    const bool if_continued = 1;
 
     //configuration space from x_min to x_max, from vx_min to vx_max
     const double x_min = 0.0;
@@ -27,13 +27,13 @@ class UniversalParameters
     const double grid_width = L / grids_num;
 
     //simulated steps & dt
-    const int maxsteps = 10000;
-    const int time_ran = 0;
+    const int maxsteps = 400000;
+    const int time_ran = 20000;
     const double timestep_condition = 0.1;
 
     //data path
     const string data_path = "./data/";
-    const int data_steps = 1000;
+    const int data_steps = 10000;
     const int data_num = maxsteps / data_steps;
 };
 
