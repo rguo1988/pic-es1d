@@ -28,7 +28,7 @@ class UniversalParameters
 
     //simulated steps & dt
     const int maxsteps = 400000;
-    const int time_ran = 20000;
+    const int time_ran = 22000;
     const double timestep_condition = 0.1;
 
     //data path
