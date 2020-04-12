@@ -11,8 +11,8 @@ using namespace std;
 
 void Input::PrintSpecialInformation()
 {
-    cout << "This is the code simulated the formation of kappa plasma!" << endl;
-    cout << "Uae = " << uae << " Uai = " << uai << endl;
+    cout << "This is the code simulated the formation of BGK mode!" << endl;
+    cout << "Uae = " << uae << endl;
 }
 double Input::GetElecInitDistrib(double x, double v)
 {
@@ -22,7 +22,7 @@ double Input::GetElecInitDistrib(double x, double v)
 }
 double Input::GetBackgroundIonDensity(double x)
 {
-    double ui = 1.0 + uai * cos(k * x);
+    double ui = 1.0;
     return ui;
 }
 void Input::Initialize()
