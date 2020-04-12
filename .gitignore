@@ -6,3 +6,4 @@ sjob
 pic
 *.swp
 *~
+.ipynb_checkpoints/
