@@ -7,3 +7,4 @@ pic
 *.swp
 *~
 .ipynb_checkpoints/
+lastdata*
