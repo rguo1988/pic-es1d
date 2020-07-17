@@ -27,7 +27,7 @@ class UniversalParameters
     const double grid_width = L / grids_num;
 
     //simulated steps & dt
-    const int maxsteps = 10000;
+    const int maxsteps = 5000;
     const int time_ran = 0;
     const double timestep_condition = 0.1;
 
