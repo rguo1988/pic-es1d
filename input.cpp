@@ -18,6 +18,10 @@ double Input::GetElecInitDistrib(double x, double v)
 {
     double ue = 1.0 + uae * cos(k * x);
     double f = sqrt( m_e / (2 * M_PI * T_e) ) * exp(-m_e * pow(v, 2) / 2 / T_e);
+    //double vm = 1.7320508076;
+    //double f = 0.0;
+    //if ( v>=-vm && v<=vm )
+        //f = 0.5 / vm;
     return ue / L * f;
 }
 double Input::GetBackgroundIonDensity(double x)

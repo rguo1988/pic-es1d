@@ -8,14 +8,14 @@ class UniversalParameters
 {
   protected:
     //if the simulation continued from last calculation
-    const bool if_continued = 1;
+    const bool if_continued = 0;
 
     //configuration space from x_min to x_max, from vx_min to vx_max
     const double x_min = 0.0;
-    const double x_max = 60.0;
+    const double x_max = 30.0;
 
-    const double vx_min = -5.0;
-    const double vx_max = 5.0;
+    const double vx_min = -10.0;
+    const double vx_max = 10.0;
 
     const double L = fabs(x_max - x_min);
     const double vx_width = fabs(vx_max - vx_min);
@@ -23,17 +23,17 @@ class UniversalParameters
     const double k = 2.0 * M_PI / L;
 
     //grids number
-    const int grids_num = 400;
+    const int grids_num = 100;
     const double grid_width = L / grids_num;
 
     //simulated steps & dt
-    const int maxsteps = 40000;
+    const int maxsteps = 10000;
     const int time_ran = 0;
     const double timestep_condition = 0.1;
 
     //data path
     const string data_path = "./data/";
-    const int data_steps = 1000;
+    const int data_steps = 10;
     const int data_num = maxsteps / data_steps;
 };
 
@@ -43,7 +43,7 @@ class Input: public UniversalParameters
     //electron mass
     static constexpr double m_e = 1.0;
     //electron number
-    static constexpr double N_e = 100000;
+    static constexpr double N_e = 200000;
     //electron temperature
     static constexpr double T_e = 1;
 
@@ -58,8 +58,8 @@ class Input: public UniversalParameters
     const double lambda_D = sqrt(T_e / n_e_aver / q_e / q_e);
 
     //special settings
-    const double uae = 0.8;
-    const double uai = 0.8;
+    const double uae = 0.6;
+    const double uai = 0.4;
 
     //define species
     vector<Particles> species;
