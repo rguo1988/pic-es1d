@@ -27,13 +27,13 @@ class UniversalParameters
     const double grid_width = L / grids_num;
 
     //simulated steps & dt
-    const int maxsteps = 10000;
+    const int maxsteps = 15000;
     const int time_ran = 0;
     const double timestep_condition = 0.1;
 
     //data path
     const string data_path = "./data/";
-    const int data_steps = 10;
+    const int data_steps = 15;
     const int data_num = maxsteps / data_steps;
 };
 
@@ -58,8 +58,8 @@ class Input: public UniversalParameters
     const double lambda_D = sqrt(T_e / n_e_aver / q_e / q_e);
 
     //special settings
-    const double uae = 0.6;
-    const double uai = 0.4;
+    const double uae = 0.9;
+    const double uai = 0.1;
 
     //define species
     vector<Particles> species;
