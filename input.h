@@ -12,7 +12,7 @@ class UniversalParameters
 
     //configuration space from x_min to x_max, from vx_min to vx_max
     const double x_min = 0.0;
-    const double x_max = 30.0;
+    const double x_max = 200.0;
 
     const double vx_min = -10.0;
     const double vx_max = 10.0;
@@ -23,17 +23,17 @@ class UniversalParameters
     const double k = 2.0 * M_PI / L;
 
     //grids number
-    const int grids_num = 100;
+    const int grids_num = 500;
     const double grid_width = L / grids_num;
 
     //simulated steps & dt
-    const int maxsteps = 15000;
+    const int maxsteps = 10000;
     const int time_ran = 0;
     const double timestep_condition = 0.1;
 
     //data path
     const string data_path = "./data/";
-    const int data_steps = 15;
+    const int data_steps = 20;
     const int data_num = maxsteps / data_steps;
 };
 
@@ -58,8 +58,10 @@ class Input: public UniversalParameters
     const double lambda_D = sqrt(T_e / n_e_aver / q_e / q_e);
 
     //special settings
-    const double uae = 0.9;
-    const double uai = 0.1;
+    const double uae = 0.6;
+    const double uai = 0.52;
+    const double gamma = 0.005;
+    const double D = gamma * 1.0 / m_e;
 
     //define species
     vector<Particles> species;

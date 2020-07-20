@@ -5,6 +5,8 @@
 #include<iostream>
 #include<iomanip>
 #include<fstream>
+#include<gsl/gsl_rng.h>
+#include<gsl/gsl_randist.h>
 
 using namespace std;
 
@@ -65,8 +67,24 @@ PhaseSpace PlasmaSystem::BorisPusher(PhaseSpace last_rv, double fx, double mass)
     return next_rv;
 }
 
+PhaseSpace PlasmaSystem::LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng* r)
+{
+    // dv= - gamma * v * dt + sqrt(D * dt) * w;
+    double tempx = last_rv.x + last_rv.vx * dt;
+    double tempv = last_rv.vx - gamma * last_rv.vx * dt + sqrt(D * dt ) * gsl_ran_gaussian(r, sqrt(2.0));
+    PhaseSpace next_rv(tempx, tempv);
+    return next_rv;
+}
 void PlasmaSystem::PushOneStep(int if_init)
 {
+    // generating rnd number
+    struct timeb time_seed;
+    ftime(&time_seed);
+    gsl_rng_default_seed = (time_seed.time * 1000 + time_seed.millitm);
+    gsl_rng *r;
+    r = gsl_rng_alloc(gsl_rng_default);
+    //double w = gsl_ran_gaussian(r, sqrt(2.0));
+
     for(auto &particles_a : species)
     {
         #pragma omp parallel for
@@ -86,6 +104,7 @@ void PlasmaSystem::PushOneStep(int if_init)
             else
             {
                 particles_a.rv[j] = BorisPusher(particles_a.rv[j], fex, particles_a.m);
+                //particles_a.rv[j] = LangevinPusher(particles_a.rv[j], gamma, D, r);
             }
             //period condition
             while(particles_a.rv[j].x < x_min)
