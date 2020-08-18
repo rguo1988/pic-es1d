@@ -12,7 +12,7 @@ class UniversalParameters
 
     //configuration space from x_min to x_max, from vx_min to vx_max
     const double x_min = 0.0;
-    const double x_max = 200.0;
+    const double x_max = 100.0;
 
     const double vx_min = -10.0;
     const double vx_max = 10.0;
@@ -23,7 +23,7 @@ class UniversalParameters
     const double k = 2.0 * M_PI / L;
 
     //grids number
-    const int grids_num = 500;
+    const int grids_num = 200;
     const double grid_width = L / grids_num;
 
     //simulated steps & dt
@@ -33,7 +33,7 @@ class UniversalParameters
 
     //data path
     const string data_path = "./data/";
-    const int data_steps = 20;
+    const int data_steps = 10;
     const int data_num = maxsteps / data_steps;
 };
 
@@ -43,7 +43,7 @@ class Input: public UniversalParameters
     //electron mass
     static constexpr double m_e = 1.0;
     //electron number
-    static constexpr double N_e = 200000;
+    static constexpr double N_e = 400000;
     //electron temperature
     static constexpr double T_e = 1;
 
@@ -59,7 +59,7 @@ class Input: public UniversalParameters
 
     //special settings
     const double uae = 0.6;
-    const double uai = 0.52;
+    const double uai = 0.5;
     const double gamma = 0.005;
     const double D = gamma * 1.0 / m_e;
 
