@@ -12,7 +12,7 @@ class UniversalParameters
 
     //configuration space from x_min to x_max, from vx_min to vx_max
     const double x_min = 0.0;
-    const double x_max = 100.0;
+    const double x_max = 8.0;
 
     const double vx_min = -10.0;
     const double vx_max = 10.0;
@@ -20,7 +20,7 @@ class UniversalParameters
     const double L = fabs(x_max - x_min);
     const double vx_width = fabs(vx_max - vx_min);
     //wave number
-    const double k = 2.0 * M_PI / L;
+    const double k = 1 * 2.0 * M_PI / L;
 
     //grids number
     const int grids_num = 200;
@@ -33,7 +33,7 @@ class UniversalParameters
 
     //data path
     const string data_path = "./data/";
-    const int data_steps = 10;
+    const int data_steps = 2000;
     const int data_num = maxsteps / data_steps;
 };
 
@@ -43,7 +43,7 @@ class Input: public UniversalParameters
     //electron mass
     static constexpr double m_e = 1.0;
     //electron number
-    static constexpr double N_e = 400000;
+    static constexpr double N_e = 500000;
     //electron temperature
     static constexpr double T_e = 1;
 
@@ -58,10 +58,11 @@ class Input: public UniversalParameters
     const double lambda_D = sqrt(T_e / n_e_aver / q_e / q_e);
 
     //special settings
-    const double uae = 0.6;
-    const double uai = 0.5;
-    const double gamma = 0.005;
-    const double D = gamma * 1.0 / m_e;
+    const double uae = 0.9;
+    const double uai = 0.2;
+    const double u = 0;
+    //const double gamma = 0.005;
+    //const double D = gamma * 1.0 / m_e;
 
     //define species
     vector<Particles> species;
