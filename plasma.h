@@ -21,6 +21,8 @@ class PlasmaSystem: public Input
     vector<double> Ek;
     vector<double> Ep;
     vector<double> Et;
+    double T[grids_num];
+    double n[grids_num];
 
     PlasmaSystem();
 
@@ -29,6 +31,8 @@ class PlasmaSystem: public Input
 
     //trace energy during simulation
     void CalculateE();
+    //calculate the temperature in every cell
+    void CalculateT();
     
     //Setup Charge
     void ClearChargeOnGrids();

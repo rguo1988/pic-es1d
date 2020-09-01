@@ -34,6 +34,18 @@ void PlasmaSystem::CalculateE()
     Ep.push_back(tempEp);
     Et.push_back(tempEk + tempEp);
 }
+void PlasmaSystem::CalculateT()
+{
+    for (auto particles_a : species)
+    {
+        for(auto prv : particles_a.rv)
+        {
+
+            tempEk += particles_a.m * (prv.vx * prv.vx) / 2;
+        }
+        particles_tot_num += particles_a.num;
+    }
+}
 PlasmaSystem::PlasmaSystem():
     B(0, 0, 0)
 {

@@ -23,7 +23,7 @@ class UniversalParameters
     const double k = 1 * 2.0 * M_PI / L;
 
     //grids number
-    const int grids_num = 200;
+    static const int grids_num = 200;
     const double grid_width = L / grids_num;
 
     //simulated steps & dt
