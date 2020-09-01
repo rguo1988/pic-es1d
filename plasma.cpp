@@ -36,20 +36,31 @@ void PlasmaSystem::CalculateE()
 }
 void PlasmaSystem::CalculateT()
 {
+    T.clear();
+    T.resize(grids_num, 0.0);
+    num_in_grid.clear();
+    num_in_grid.resize(grids_num, 0.0);
+
     for (auto particles_a : species)
     {
         for(auto prv : particles_a.rv)
         {
-
-            tempEk += particles_a.m * (prv.vx * prv.vx) / 2;
+            double px = prv.x - x_min;
+            int idx_grid = floor(px / grid_width);
+            if (idx_grid == grids_num)
+                idx_grid = 0;
+            T[idx_grid] += particles_a.m * (prv.vx * prv.vx);
+            num_in_grid[idx_grid]++;
         }
-        particles_tot_num += particles_a.num;
+    }
+    for(int i = 0; i < grids_num; i++)
+    {
+        T[i] /= num_in_grid[i];
     }
 }
 PlasmaSystem::PlasmaSystem():
     B(0, 0, 0)
 {
-
     Ek.clear();
     Ep.clear();
     Et.clear();
@@ -155,6 +166,7 @@ void PlasmaSystem::Run()
     Initialize();
     PrintParameters();
     PrintSpecialInformation();
+    CalculateT();
 
     //main loop
     for(int n = 0; n < maxsteps; n++)
@@ -175,8 +187,12 @@ void PlasmaSystem::Run()
             {
                 string filenameV = data_path + particles_a.name + "v_data" + p;
                 string filenameX = data_path + particles_a.name + "x_data" + p;
+                //output particles x v
                 OutputData(filenameV, GetParticlesVX(particles_a));
                 OutputData(filenameX,  GetParticlesX(particles_a));
+                //output temperature distribution
+                OutputData(data_path + "temperature", T);
+                OutputData(data_path + "num_in_grid", num_in_grid);
             }
         }
 

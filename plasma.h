@@ -21,8 +21,8 @@ class PlasmaSystem: public Input
     vector<double> Ek;
     vector<double> Ep;
     vector<double> Et;
-    double T[grids_num];
-    double n[grids_num];
+    vector<double> T;
+    vector<double> num_in_grid;
 
     PlasmaSystem();
 
