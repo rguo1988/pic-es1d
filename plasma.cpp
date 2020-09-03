@@ -92,7 +92,11 @@ PhaseSpace PlasmaSystem::BorisPusher(PhaseSpace last_rv, double fx, double mass)
 
 PhaseSpace PlasmaSystem::LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng* r)
 {
-    // dv= - gamma * v * dt + sqrt(D * dt) * w;
+    int idx = floor((last_rv.x - x_min) / grid_width);
+    if (idx == grids_num)
+        idx = 0;
+    D = gamma * T[idx] / m_e;
+
     double tempx = last_rv.x + last_rv.vx * dt;
     double tempv = last_rv.vx - gamma * last_rv.vx * dt + sqrt(D * dt ) * gsl_ran_gaussian(r, sqrt(2.0));
     PhaseSpace next_rv(tempx, tempv);
@@ -166,12 +170,12 @@ void PlasmaSystem::Run()
     Initialize();
     PrintParameters();
     PrintSpecialInformation();
-    CalculateT();
 
     //main loop
-    for(int n = 0; n < maxsteps; n++)
+    for(int n = 0; n < maxsteps + 1; n++)
     {
-        int percent = 100 * n / (maxsteps - 1);
+        CalculateT();
+        int percent = 100 * n / (maxsteps);
         //print running process
         if(percent % 5 == 0)
         {
@@ -191,8 +195,8 @@ void PlasmaSystem::Run()
                 OutputData(filenameV, GetParticlesVX(particles_a));
                 OutputData(filenameX,  GetParticlesX(particles_a));
                 //output temperature distribution
-                OutputData(data_path + "temperature", T);
-                OutputData(data_path + "num_in_grid", num_in_grid);
+                OutputData(data_path + "temperature" + p, T);
+                OutputData(data_path + "num_in_grid" + p, num_in_grid);
             }
         }
 
