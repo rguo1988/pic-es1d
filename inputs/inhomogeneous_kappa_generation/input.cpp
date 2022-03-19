@@ -17,7 +17,7 @@ void Input::PrintSpecialInformation()
 double Input::GetElecInitDistrib(double x, double v)
 {
     double ue = 1.0 + uae * cos(k * x);
-    double f = sqrt( m_e / (2 * M_PI * T_e) ) * exp(-m_e * pow(v, 2) / 2 / T_e);
+    double f = sqrt( m_e / (2 * M_PI * T_e) ) * exp(-m_e * pow(v - u, 2) / 2 / T_e);
     return ue / L * f;
 }
 double Input::GetBackgroundIonDensity(double x)

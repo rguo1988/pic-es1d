@@ -70,6 +70,7 @@ PhaseSpace PlasmaSystem::BorisInitPusher(PhaseSpace init_rv, double fx, double m
 {
     double v_half = init_rv.vx + fx * dt / mass / 2;
     double x = init_rv.x + v_half * dt;
+
     PhaseSpace r_half_v(x, v_half);
     return r_half_v;
 }
