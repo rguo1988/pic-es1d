@@ -4,15 +4,15 @@
 
 using namespace std;
 
-double OutputTotCharge(ElectricFieldGrids cdg)
-{
-    double tempq = 0.0;
-    for(auto i : cdg.charge_dens_grid)
-    {
-        tempq += i.second;
-    }
-    return tempq;
-}
+//double OutputTotCharge(ElectricField cdg)
+//{
+//double tempq = 0.0;
+//for(auto i : cdg.charge)
+//{
+//tempq += i.second;
+//}
+//return tempq;
+//}
 void OutputData(string filename, vector<double> a)
 {
     ofstream ofile;
@@ -23,50 +23,49 @@ void OutputData(string filename, vector<double> a)
     }
     ofile.close();
 }
-void OutputNetCharge(ElectricFieldGrids efg)
-{
-    double tot_charge = 0.0;
-    //for(int i = 0; i < efg.grids_num; i++)
-    for(auto rho : efg.charge_dens_grid)
-    {
-        tot_charge += rho.second;
-    }
-    if(tot_charge == 0)
-        cout << "Net Charge is zero!" << endl;
-    else
-        cout << "Net Charge is NOT zero!!!" << tot_charge << endl;
-}
-void OutputChargeGrids(string filename, ElectricFieldGrids cdg)
+//void OutputNetCharge(ElectricFieldGrids efg)
+//{
+//double tot_charge = 0.0;
+////for(int i = 0; i < efg.grids_num; i++)
+//for(auto rho : efg.charge_dens_grid)
+//{
+//tot_charge += rho.second;
+//}
+//if(tot_charge == 0)
+//cout << "Net Charge is zero!" << endl;
+//else
+//cout << "Net Charge is NOT zero!!!" << tot_charge << endl;
+//}
+//void OutputChargeGrids(string filename, ElectricFieldGrids cdg)
+//{
+//ofstream ofile;
+//ofile.open(filename.c_str());
+
+//for(auto g : cdg.charge_dens_grid)
+//{
+//ofile << g.first.x << "  " << g.second << endl;
+//}
+//ofile.close();
+//}
+void OutputElectricPotentialGrids(string filename, ElectricField efg)
 {
     ofstream ofile;
     ofile.open(filename.c_str());
 
-    for(auto g : cdg.charge_dens_grid)
+    for(int i = 0; i < efg.nx_grids; i++)
     {
-        ofile << g.first.x << "  " << g.second << endl;
+        ofile << efg.GetPhi(i) << endl;
     }
     ofile.close();
 }
-void OutputElectricPotentialGrids(string filename, ElectricFieldGrids efg)
+void OutputElectricFieldGrids(string filename, ElectricField efg)
 {
     ofstream ofile;
     ofile.open(filename.c_str());
 
-    for(auto g : efg.elec_pot_grid)
+    for(int i = 0; i < efg.nx_grids; i++)
     {
-        ofile << g.first.x << "  " << g.second << endl;
-    }
-    ofile.close();
-}
-void OutputElectricFieldGrids(string filename, ElectricFieldGrids efg)
-{
-    ofstream ofile;
-    ofile.open(filename.c_str());
-
-    for(auto g : efg.Ex_grid)
-    {
-        GridPoint tgp(g.first.x);
-        ofile << g.first.x << "  " << g.second << endl;
+        ofile << efg.GetEx(i)<< endl;
     }
     ofile.close();
 }

@@ -31,6 +31,6 @@ int main()
 
     plasma.Run();
     double stop_time = omp_get_wtime();
-    cout << "Using Time: " << stop_time - start_time << endl;
+    cout << "  Using Time: " << stop_time - start_time << endl;
     return 0;
 }

@@ -23,6 +23,8 @@ class Particles
     vector<PhaseSpace> rv;
 
     Particles(double N, double Q, double M, string name);
+    void InitializeXV_Random(double (*Distribution)(double, double), double v_max, double L);
+    void InitializeXV_Quiet(double (*DistributionX)(double), double (*DistributionV)(double), double L, double dx, int nx_grids);
 };
 
 #endif

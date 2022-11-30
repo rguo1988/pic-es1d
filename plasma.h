@@ -1,9 +1,9 @@
-//等离子体系统
 #ifndef _plasma_h
 #define _plasma_h
 
 #include<gsl/gsl_rng.h>
 #include<sys/timeb.h>
+#include<eigen3/Eigen/Core>
 
 #include"particles.h"
 #include"esfield.h"
@@ -11,12 +11,14 @@
 #include"input.h"
 
 using namespace std;
+using namespace Eigen;
 
 class PlasmaSystem: public Input
 {
   public:
-    ElectricFieldGrids E;
+    ElectricField E;
     ConstMagneticField B;
+    VectorXd charge;
 
     vector<double> Ek;
     vector<double> Ep;
@@ -33,9 +35,8 @@ class PlasmaSystem: public Input
     void CalculateE();
     //calculate the temperature in every cell
     void CalculateT();
-    
+
     //Setup Charge
-    void ClearChargeOnGrids();
     void SetupSpeciesChargeOnGrids();
     void SetupBackgroundChargeOnGrids();
 

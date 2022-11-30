@@ -7,16 +7,16 @@
 
 using namespace std;
 
-double OutputTotCharge(ElectricFieldGrids cdg);
+double OutputTotCharge(ElectricField cdg);
 
 void OutputData(string filename, vector<double> a);
 vector<double> GetParticlesVX(Particles testp);
 vector<double> GetParticlesX(Particles testp);
 
-void OutputNetCharge(ElectricFieldGrids efg);
+void OutputNetCharge(ElectricField efg);
 
-void OutputChargeGrids(string filename, ElectricFieldGrids cdg);
-void OutputElectricPotentialGrids(string filename, ElectricFieldGrids efg);
-void OutputElectricFieldGrids(string filename, ElectricFieldGrids efg);
+void OutputChargeGrids(string filename, ElectricField cdg);
+void OutputElectricPotentialGrids(string filename, ElectricField efg);
+void OutputElectricFieldGrids(string filename, ElectricField efg);
 
 #endif
