@@ -19,7 +19,7 @@ class Input
     const bool if_continued = 0;
 
     //simulation box
-    static constexpr double k = 1.0;
+    static constexpr double k = 0.5;
     static constexpr double L = 2.0 * M_PI / k;
     const double v_max = 5.0;
     const double vx_width = 2.0 * v_max;
@@ -30,7 +30,7 @@ class Input
 
     //speices
     static constexpr double m_e = 1.0;
-    static constexpr double NePerCell = 5000;
+    static constexpr double NePerCell = 1000;
     static constexpr double T_e = 1;
     const double N_e = NePerCell * nx_grids;
     const double n_e_aver = N_e / L;
@@ -39,7 +39,7 @@ class Input
     const double lambda_De = sqrt(T_e);
 
     static constexpr double m_i = 100.0;
-    static constexpr double NiPerCell = 5000;
+    static constexpr double NiPerCell = 1000;
     static constexpr double T_i = 1;
     const double N_i = NiPerCell * nx_grids;
     const double n_i_aver = N_i / L;
@@ -69,36 +69,27 @@ class Input
     const int data_num = maxsteps / data_steps + 1;
 
     vector<Particles> species;
-
-    //static double GetElecInitDistrib(double x, double v)
-    //{
-    ////double ue = 1.0 + d * cos(k * x);
-    //double ue = 1.0;
-    //double f = sqrt( m_e / (2 * M_PI * T_e) ) * exp(-0.5 * m_e * v * v / T_e);
-    //return ue / L * f;
-    //}
+    static double GetElecInitDistrib(double x, double v)
+    {
+        double ue = 1.0 + d * cos(k * x);
+        double f = sqrt( m_e / (2 * M_PI * T_e) ) * exp(-0.5 * m_e * v * v / T_e);
+        return ue / L * f;
+    }
     static double GetElecXDistrib(double x)
     {
-        //double ue = 1.0 + d * cos(k * x);
-        //return ue;
-        return 1.0;
+        double ue = 1.0 + d * cos(k * x);
+        return ue;
     }
     static double GetElecVDistrib(double v)
     {
         double f = sqrt( m_e / (2 * M_PI * T_e) ) * exp(-0.5 * m_e * v * v / T_e);
         return f;
     }
-    //static double GetIonInitDistrib(double x, double v)
-    //{
-    //double ui = 1.0 + d * cos(k * x);
-    //double f = sqrt( m_i / (2 * M_PI * T_i) ) * exp(-0.5 * m_i * v * v / T_i);
-    //return ui / L * f;
-    //}
     static double GetIonXDistrib(double x)
     {
-        double ui = 1.0 + d * cos(k * x);
-        return ui;
-        //return 1.0;
+        //double ui = 1.0 + d * cos(k * x);
+        //return ui;
+        return 1.0;
     }
     static double GetIonVDistrib(double v)
     {
@@ -115,13 +106,13 @@ class Input
     void Initialize()
     {
         Particles electrons(N_e, q_e, m_e, "electrons");
-        Particles ions(N_i, q_i, m_i, "ions");
-        //electrons.InitializeXV_Random(GetElecInitDistrib, v_max, L);
-        electrons.InitializeXV_Quiet(GetElecXDistrib, GetElecVDistrib, L, dx, nx_grids);
+        //Particles ions(N_i, q_i, m_i, "ions");
+        electrons.InitializeXV_Random(GetElecInitDistrib, v_max, L);
+        //electrons.InitializeXV_Quiet(GetElecXDistrib, GetElecVDistrib, L, dx, nx_grids);
         //ions.InitializeXV_Random(GetIonInitDistrib, v_max, L);
-        ions.InitializeXV_Quiet(GetIonXDistrib, GetIonVDistrib, L, dx, nx_grids);
+        //ions.InitializeXV_Quiet(GetIonXDistrib, GetIonVDistrib, L, dx, nx_grids);
         species.push_back(electrons);
-        species.push_back(ions);
+        //species.push_back(ions);
     }
     void PrintSpecialInformation()
     {

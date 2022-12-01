@@ -66,36 +66,36 @@ PlasmaSystem::PlasmaSystem():
     charge.resize(nx_grids);
 }
 
-PhaseSpace PlasmaSystem::BorisInitPusher(PhaseSpace init_rv, double fx, double mass)
-{
-    double v_half = init_rv.vx + fx * dt / mass / 2;
-    double x = init_rv.x + v_half * dt;
+//PhaseSpace PlasmaSystem::BorisInitPusher(PhaseSpace init_rv, double fx, double mass)
+//{
+    //double v_half = init_rv.vx + fx * dt / mass / 2;
+    //double x = init_rv.x + v_half * dt;
 
-    PhaseSpace r_half_v(x, v_half);
-    return r_half_v;
-}
+    //PhaseSpace r_half_v(x, v_half);
+    //return r_half_v;
+//}
 
-PhaseSpace PlasmaSystem::BorisFinalPusher(PhaseSpace init_rv, double fx, double mass)
-{
-    double v_half = init_rv.vx + fx * dt / mass / 2;
-    PhaseSpace r_half_v(init_rv.x, v_half);
-    return r_half_v;
-}
+//PhaseSpace PlasmaSystem::BorisFinalPusher(PhaseSpace init_rv, double fx, double mass)
+//{
+    //double v_half = init_rv.vx + fx * dt / mass / 2;
+    //PhaseSpace r_half_v(init_rv.x, v_half);
+    //return r_half_v;
+//}
 
-PhaseSpace PlasmaSystem::BorisPusher(PhaseSpace last_rv, double fx, double mass)
-{
-    double vx_next = last_rv.vx + fx * dt / mass;
-    double x_next = last_rv.x + dt * vx_next;
+//PhaseSpace PlasmaSystem::BorisPusher(PhaseSpace last_rv, double fx, double mass)
+//{
+    //double vx_next = last_rv.vx + fx * dt / mass;
+    //double x_next = last_rv.x + dt * vx_next;
 
-    PhaseSpace next_rv(x_next, vx_next);
-    return next_rv;
-}
+    //PhaseSpace next_rv(x_next, vx_next);
+    //return next_rv;
+//}
 
 PhaseSpace PlasmaSystem::LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng* r)
 {
     //int idx = floor(last_rv.x / dx);
     //if (idx == nx_grids)
-        //idx = 0;
+    //idx = 0;
     //D = gamma * T[idx] / m_i;
 
     //double tempx = last_rv.x + last_rv.vx * dt;
@@ -124,14 +124,15 @@ void PlasmaSystem::PushOneStep(int if_init)
             {
                 fex += particles_a.q * E.GetEx(g.first) * g.second * dx;
             }
-
             if(if_init == 0)
             {
-                particles_a.rv[j] = BorisInitPusher(particles_a.rv[j], fex, particles_a.m);
+                particles_a.rv[j].vx += 0.5 * fex * dt / particles_a.m;
+                particles_a.rv[j].x += particles_a.rv[j].vx * dt;
             }
             else
             {
-                particles_a.rv[j] = BorisPusher(particles_a.rv[j], fex, particles_a.m);
+                particles_a.rv[j].vx += fex * dt / particles_a.m;
+                particles_a.rv[j].x += particles_a.rv[j].vx * dt;
                 //particles_a.rv[j] = LangevinPusher(particles_a.rv[j], gamma, D, r);
             }
             //period condition
@@ -188,14 +189,14 @@ void PlasmaSystem::Run()
 
             for(auto particles_a : species)
             {
-            string filenameV = data_path + particles_a.name + "v_data" + p;
-            string filenameX = data_path + particles_a.name + "x_data" + p;
-            //output particles x v
-            OutputData(filenameV, GetParticlesVX(particles_a));
-            OutputData(filenameX,  GetParticlesX(particles_a));
-            //output temperature distribution
-            //OutputData(data_path + "temperature" + p, T);
-            //OutputData(data_path + "num_in_grid" + p, num_in_grid);
+                string filenameV = data_path + particles_a.name + "v_data" + p;
+                string filenameX = data_path + particles_a.name + "x_data" + p;
+                //output particles x v
+                OutputData(filenameV, GetParticlesVX(particles_a));
+                OutputData(filenameX,  GetParticlesX(particles_a));
+                //output temperature distribution
+                //OutputData(data_path + "temperature" + p, T);
+                //OutputData(data_path + "num_in_grid" + p, num_in_grid);
             }
         }
 

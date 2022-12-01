@@ -41,9 +41,9 @@ class PlasmaSystem: public Input
     void SetupBackgroundChargeOnGrids();
 
     //BorisPusher
-    PhaseSpace BorisInitPusher(PhaseSpace init_rv, double fx, double mass);
-    PhaseSpace BorisFinalPusher(PhaseSpace init_rv, double fx, double mass);
-    PhaseSpace BorisPusher(PhaseSpace last_rv, double fx, double mass);
+    //PhaseSpace BorisInitPusher(PhaseSpace init_rv, double fx, double mass);
+    //PhaseSpace BorisFinalPusher(PhaseSpace init_rv, double fx, double mass);
+    //PhaseSpace BorisPusher(PhaseSpace last_rv, double fx, double mass);
     PhaseSpace LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng *r);
     void PushOneStep(int if_init);
     void Run();
