@@ -3,20 +3,15 @@
 #define _diagnose_h
 #include <fstream>
 #include <string>
-#include "esfield.h"
+#include "poisson_solver.h"
 
 using namespace std;
-
-double OutputTotCharge(ElectricField cdg);
 
 void OutputData(string filename, vector<double> a);
 vector<double> GetParticlesVX(Particles testp);
 vector<double> GetParticlesX(Particles testp);
 
-void OutputNetCharge(ElectricField efg);
-
-void OutputChargeGrids(string filename, ElectricField cdg);
-void OutputElectricPotentialGrids(string filename, ElectricField efg);
-void OutputElectricFieldGrids(string filename, ElectricField efg);
+void OutputElectricPotentialGrids(string filename, PoissonSolverPeriodicBC_FFTW efg);
+void OutputElectricFieldGrids(string filename, PoissonSolverPeriodicBC_FFTW efg);
 
 #endif

@@ -15,7 +15,7 @@
 
 //project head file
 #include"particles.h"
-#include"esfield.h"
+#include"poisson_solver.h"
 #include"bfield.h"
 #include"diagnose.h"
 #include"plasma.h"

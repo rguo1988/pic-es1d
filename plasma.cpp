@@ -1,5 +1,6 @@
 //class plasma realization
 #include"plasma.h"
+#include"partition1d.h"
 #include"input.h"
 #include"diagnose.h"
 #include<iostream>
@@ -66,31 +67,6 @@ PlasmaSystem::PlasmaSystem():
     charge.resize(nx_grids);
 }
 
-//PhaseSpace PlasmaSystem::BorisInitPusher(PhaseSpace init_rv, double fx, double mass)
-//{
-    //double v_half = init_rv.vx + fx * dt / mass / 2;
-    //double x = init_rv.x + v_half * dt;
-
-    //PhaseSpace r_half_v(x, v_half);
-    //return r_half_v;
-//}
-
-//PhaseSpace PlasmaSystem::BorisFinalPusher(PhaseSpace init_rv, double fx, double mass)
-//{
-    //double v_half = init_rv.vx + fx * dt / mass / 2;
-    //PhaseSpace r_half_v(init_rv.x, v_half);
-    //return r_half_v;
-//}
-
-//PhaseSpace PlasmaSystem::BorisPusher(PhaseSpace last_rv, double fx, double mass)
-//{
-    //double vx_next = last_rv.vx + fx * dt / mass;
-    //double x_next = last_rv.x + dt * vx_next;
-
-    //PhaseSpace next_rv(x_next, vx_next);
-    //return next_rv;
-//}
-
 PhaseSpace PlasmaSystem::LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng* r)
 {
     //int idx = floor(last_rv.x / dx);
@@ -106,6 +82,7 @@ PhaseSpace PlasmaSystem::LangevinPusher(PhaseSpace last_rv, double gamma, double
 }
 void PlasmaSystem::PushOneStep(int if_init)
 {
+    /*
     // generating rnd number
     struct timeb time_seed;
     ftime(&time_seed);
@@ -146,6 +123,7 @@ void PlasmaSystem::PushOneStep(int if_init)
             }
         }
     }
+    */
 }
 
 void PlasmaSystem::ExicteWave(double A, double k)
@@ -194,9 +172,6 @@ void PlasmaSystem::Run()
                 //output particles x v
                 OutputData(filenameV, GetParticlesVX(particles_a));
                 OutputData(filenameX,  GetParticlesX(particles_a));
-                //output temperature distribution
-                //OutputData(data_path + "temperature" + p, T);
-                //OutputData(data_path + "num_in_grid" + p, num_in_grid);
             }
         }
 
@@ -204,9 +179,49 @@ void PlasmaSystem::Run()
         charge.resize(nx_grids);
         charge.setZero();
         SetupSpeciesChargeOnGrids();
-        //SetupBackgroundChargeOnGrids();
-        E.SolveEFieldOnGrids(charge);
-        PushOneStep(n);
+        SetupBackgroundChargeOnGrids();
+        E.Solve(charge);
+
+        //PushOneStep;
+        //struct timeb time_seed;
+        //ftime(&time_seed);
+        //gsl_rng_default_seed = (time_seed.time * 1000 + time_seed.millitm);
+        //gsl_rng *r;
+        //r = gsl_rng_alloc(gsl_rng_default);
+
+        for(auto &particles_a : species)
+        {
+            #pragma omp parallel for
+            for(int j = 0; j < particles_a.num; j++)
+            {
+                map<int, double> partition_contrib = PartitionToGrid(dx, nx_grids, particles_a.rv[j].x, 2); //linear interpolation //ec scheme
+                double fex = 0.0;
+                for(auto g : partition_contrib)
+                {
+                    fex += particles_a.q * E.GetEx(g.first) * g.second * dx;
+                }
+                if(n == 0)
+                {
+                    particles_a.rv[j].vx += 0.5 * fex * dt / particles_a.m;
+                    particles_a.rv[j].x += particles_a.rv[j].vx * dt;
+                }
+                else
+                {
+                    particles_a.rv[j].vx += fex * dt / particles_a.m;
+                    particles_a.rv[j].x += particles_a.rv[j].vx * dt;
+                    //particles_a.rv[j] = LangevinPusher(particles_a.rv[j], gamma, D, r);
+                }
+                //period condition
+                while(particles_a.rv[j].x < 0.0)
+                {
+                    particles_a.rv[j].x += L;
+                }
+                while(particles_a.rv[j].x >= L)
+                {
+                    particles_a.rv[j].x -= L;
+                }
+            }
+        }
         CalculateE();
     }
     //output energy evolution

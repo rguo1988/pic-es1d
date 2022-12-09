@@ -6,7 +6,7 @@
 #include<eigen3/Eigen/Core>
 
 #include"particles.h"
-#include"esfield.h"
+#include"poisson_solver.h"
 #include"bfield.h"
 #include"input.h"
 
@@ -16,7 +16,7 @@ using namespace Eigen;
 class PlasmaSystem: public Input
 {
   public:
-    ElectricField E;
+    PoissonSolverPeriodicBC_FFTW E;
     ConstMagneticField B;
     VectorXd charge;
 
@@ -41,9 +41,6 @@ class PlasmaSystem: public Input
     void SetupBackgroundChargeOnGrids();
 
     //BorisPusher
-    //PhaseSpace BorisInitPusher(PhaseSpace init_rv, double fx, double mass);
-    //PhaseSpace BorisFinalPusher(PhaseSpace init_rv, double fx, double mass);
-    //PhaseSpace BorisPusher(PhaseSpace last_rv, double fx, double mass);
     PhaseSpace LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng *r);
     void PushOneStep(int if_init);
     void Run();
