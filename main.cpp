@@ -1,23 +1,9 @@
 //general head file
-#include <fstream>
-#include <iomanip>
-#include <sstream>
 #include <iostream>
-#include <vector>
-#include <cmath>
-#include <map>
-#include <string>
-#include<stdio.h>
-#include<stdlib.h>
-#include<limits>
 #include<omp.h>
 
 //project head file
-#include"particles.h"
-#include"poisson_solver.h"
-#include"diagnose.h"
 #include"plasma.h"
-#include"input.h"
 
 using namespace std;
 

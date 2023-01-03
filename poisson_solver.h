@@ -3,7 +3,6 @@
 
 #include<eigen3/Eigen/Core>
 #include <fftw3.h>
-#include "particles.h"
 
 using namespace std;
 using namespace Eigen;

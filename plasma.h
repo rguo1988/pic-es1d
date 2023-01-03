@@ -1,11 +1,6 @@
 #ifndef _plasma_h
 #define _plasma_h
 
-#include<gsl/gsl_rng.h>
-#include<sys/timeb.h>
-#include<eigen3/Eigen/Core>
-
-#include"particles.h"
 #include"poisson_solver.h"
 #include"input.h"
 
@@ -38,8 +33,7 @@ class PlasmaSystem: public Input
     void SetupSpeciesChargeOnGrids();
     void SetupBackgroundChargeOnGrids();
 
-    //BorisPusher
-    PhaseSpace LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng *r);
+    //PhaseSpace LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng *r);
     void Run();
 
     //excite another wave

@@ -1,9 +1,9 @@
 //测试，调试，以及输出文件
 #ifndef _diagnose_h
 #define _diagnose_h
-#include <fstream>
-#include <string>
-#include "poisson_solver.h"
+#include<string>
+#include"poisson_solver.h"
+#include"particles.h"
 
 using namespace std;
 

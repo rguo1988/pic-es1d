@@ -1,7 +1,7 @@
 //
 #include "particles.h"
-#include<gsl/gsl_rng.h>
-#include<ctime>
+#include<random>
+#include<chrono>
 #include<cmath>
 #include<iostream>
 
@@ -26,26 +26,25 @@ void Particles::InitializeXV_Random(double (*Distribution)(double, double), doub
     cout << "  Initializing " << name << "..." << endl;
 
     //set random number
-    gsl_rng_default_seed = ((unsigned long)(time(NULL)));
-    gsl_rng *r;
-    r = gsl_rng_alloc(gsl_rng_default);
+    default_random_engine e;
+    uniform_real_distribution<double> uniform_dist(0.0,1.0);
+    e.seed(chrono::system_clock::now().time_since_epoch().count());
 
     //initialize particles
     double max_probability_density = Distribution(0.0, 0.0);
     for(int i = 0; i < num; i++)
     {
-        double temp_vx = gsl_rng_uniform(r) * 2 * v_max - v_max;
-        double temp_x = gsl_rng_uniform(r) * L;
+        double temp_vx = uniform_dist(e) * 2 * v_max - v_max;
+        double temp_x = uniform_dist(e) * L;
 
-        while(gsl_rng_uniform(r) * max_probability_density > Distribution(temp_x, temp_vx))
+        while(uniform_dist(e) * max_probability_density > Distribution(temp_x, temp_vx))
         {
-            temp_x = gsl_rng_uniform(r) * L;
-            temp_vx = gsl_rng_uniform(r) * 2 * v_max - v_max;
+            temp_x = uniform_dist(e) * L;
+            temp_vx = uniform_dist(e) * 2 * v_max - v_max;
         }
         rv[i].x = temp_x;
         rv[i].vx = temp_vx;
     }
-    gsl_rng_free(r);
 
     cout << "Finish!" << endl;
 }

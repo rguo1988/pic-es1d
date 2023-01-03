@@ -1,6 +1,7 @@
-#include "diagnose.h"
-#include <iostream>
-#include <iomanip>
+#include"diagnose.h"
+#include<iostream>
+#include<iomanip>
+#include<fstream>
 
 using namespace std;
 

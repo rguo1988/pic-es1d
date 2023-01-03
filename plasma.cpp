@@ -6,8 +6,6 @@
 #include<iostream>
 #include<iomanip>
 #include<fstream>
-#include<gsl/gsl_rng.h>
-#include<gsl/gsl_randist.h>
 
 using namespace std;
 
@@ -67,8 +65,8 @@ PlasmaSystem::PlasmaSystem():
     charge.resize(nx_grids);
 }
 
-PhaseSpace PlasmaSystem::LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng* r)
-{
+//PhaseSpace PlasmaSystem::LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng* r)
+//{
     //int idx = floor(last_rv.x / dx);
     //if (idx == nx_grids)
     //idx = 0;
@@ -78,8 +76,8 @@ PhaseSpace PlasmaSystem::LangevinPusher(PhaseSpace last_rv, double gamma, double
     //double tempv = last_rv.vx - gamma * last_rv.vx * dt + sqrt(D * dt ) * gsl_ran_gaussian(r, sqrt(2.0));
     //PhaseSpace next_rv(tempx, tempv);
     //return next_rv;
-    return 0.0;
-}
+    //return 0.0;
+//}
 
 void PlasmaSystem::ExicteWave(double A, double k)
 {
