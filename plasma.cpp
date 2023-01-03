@@ -80,51 +80,6 @@ PhaseSpace PlasmaSystem::LangevinPusher(PhaseSpace last_rv, double gamma, double
     //return next_rv;
     return 0.0;
 }
-void PlasmaSystem::PushOneStep(int if_init)
-{
-    /*
-    // generating rnd number
-    struct timeb time_seed;
-    ftime(&time_seed);
-    gsl_rng_default_seed = (time_seed.time * 1000 + time_seed.millitm);
-    gsl_rng *r;
-    r = gsl_rng_alloc(gsl_rng_default);
-
-    for(auto &particles_a : species)
-    {
-        #pragma omp parallel for
-        for(int j = 0; j < particles_a.num; j++)
-        {
-            map<int, double> partition_contrib = PartitionToGrid(dx, nx_grids, particles_a.rv[j].x, 2); //linear interpolation //ec scheme
-            double fex = 0.0;
-            for(auto g : partition_contrib)
-            {
-                fex += particles_a.q * E.GetEx(g.first) * g.second * dx;
-            }
-            if(if_init == 0)
-            {
-                particles_a.rv[j].vx += 0.5 * fex * dt / particles_a.m;
-                particles_a.rv[j].x += particles_a.rv[j].vx * dt;
-            }
-            else
-            {
-                particles_a.rv[j].vx += fex * dt / particles_a.m;
-                particles_a.rv[j].x += particles_a.rv[j].vx * dt;
-                //particles_a.rv[j] = LangevinPusher(particles_a.rv[j], gamma, D, r);
-            }
-            //period condition
-            while(particles_a.rv[j].x < 0.0)
-            {
-                particles_a.rv[j].x += L;
-            }
-            while(particles_a.rv[j].x >= L)
-            {
-                particles_a.rv[j].x -= L;
-            }
-        }
-    }
-    */
-}
 
 void PlasmaSystem::ExicteWave(double A, double k)
 {
@@ -235,7 +190,7 @@ void PlasmaSystem::Run()
 void PlasmaSystem::PrintParameters() const
 {
     cout << "--------------------------------------------" << endl;
-    cout << "  PIC Simulation Start!" << endl;
+    cout << "  1D ES PIC Simulation Start!" << endl;
     cout << "--------------------------------------------" << endl;
     cout << "  Simulation Parameters:" << endl;
     cout << setw(13) << "  Length"

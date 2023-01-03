@@ -40,7 +40,6 @@ class PlasmaSystem: public Input
 
     //BorisPusher
     PhaseSpace LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng *r);
-    void PushOneStep(int if_init);
     void Run();
 
     //excite another wave

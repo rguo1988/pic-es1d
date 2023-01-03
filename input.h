@@ -7,7 +7,6 @@
 #include<fstream>
 #include<iomanip>
 #include<gsl/gsl_rng.h>
-#include<sys/timeb.h>
 using namespace std;
 
 class Input
@@ -107,8 +106,8 @@ class Input
     {
         Particles electrons(N_e, q_e, m_e, "electrons");
         //Particles ions(N_i, q_i, m_i, "ions");
-        electrons.InitializeXV_Random(GetElecInitDistrib, v_max, L);
-        //electrons.InitializeXV_Quiet(GetElecXDistrib, GetElecVDistrib, L, dx, nx_grids);
+        //electrons.InitializeXV_Random(GetElecInitDistrib, v_max, L);
+        electrons.InitializeXV_Quiet(GetElecXDistrib, GetElecVDistrib, L, dx, nx_grids);
         //ions.InitializeXV_Random(GetIonInitDistrib, v_max, L);
         //ions.InitializeXV_Quiet(GetIonXDistrib, GetIonVDistrib, L, dx, nx_grids);
         species.push_back(electrons);

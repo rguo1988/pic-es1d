@@ -22,6 +22,9 @@ Particles::Particles(double _n, double _q, double _m, string _name):
 }
 void Particles::InitializeXV_Random(double (*Distribution)(double, double), double v_max, double L)
 {
+    cout << "--------------------------------------------" << endl;
+    cout << "  Initializing " << name << "..." << endl;
+
     //set random number
     gsl_rng_default_seed = ((unsigned long)(time(NULL)));
     gsl_rng *r;
@@ -42,8 +45,9 @@ void Particles::InitializeXV_Random(double (*Distribution)(double, double), doub
         rv[i].x = temp_x;
         rv[i].vx = temp_vx;
     }
+    gsl_rng_free(r);
 
-
+    cout << "Finish!" << endl;
 }
 void Particles::InitializeXV_Quiet(double (*DistributionX)(double), double (*DistributionV)(double), double L, double dx, int nx_grids)
 {
@@ -53,6 +57,7 @@ void Particles::InitializeXV_Quiet(double (*DistributionX)(double), double (*Dis
     double dv = 1e-7;
     bool minus_or_plus = 0;
 
+    cout << "--------------------------------------------" << endl;
     for(int i = 0; i < nx_grids; i++)
     {
         //print assigned process
