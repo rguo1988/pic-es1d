@@ -7,7 +7,6 @@
 
 #include"particles.h"
 #include"poisson_solver.h"
-#include"bfield.h"
 #include"input.h"
 
 using namespace std;
@@ -17,7 +16,6 @@ class PlasmaSystem: public Input
 {
   public:
     PoissonSolverPeriodicBC_FFTW E;
-    ConstMagneticField B;
     VectorXd charge;
 
     vector<double> Ek;

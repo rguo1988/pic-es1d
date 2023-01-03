@@ -1,4 +1,3 @@
-//ver2.9
 //general head file
 #include <fstream>
 #include <iomanip>
@@ -16,7 +15,6 @@
 //project head file
 #include"particles.h"
 #include"poisson_solver.h"
-#include"bfield.h"
 #include"diagnose.h"
 #include"plasma.h"
 #include"input.h"
