@@ -4,6 +4,7 @@
 #include<chrono>
 #include<cmath>
 #include<iostream>
+#include<omp.h>
 
 using namespace std;
 
@@ -23,27 +24,33 @@ Particles::Particles(double _n, double _q, double _m, string _name):
 void Particles::InitializeXV_Random(double (*Distribution)(double, double), double v_max, double L)
 {
     cout << "--------------------------------------------" << endl;
-    cout << "  Initializing " << name << "..." << endl;
+    cout << "  Initializing " << name << "...";
 
     //set random number
     default_random_engine e;
-    uniform_real_distribution<double> uniform_dist(0.0,1.0);
-    e.seed(chrono::system_clock::now().time_since_epoch().count());
+    uniform_real_distribution<double> uniform_dist(0.0, 1.0);
+    //e.seed(chrono::system_clock::now().time_since_epoch().count());
 
     //initialize particles
     double max_probability_density = Distribution(0.0, 0.0);
-    for(int i = 0; i < num; i++)
+    #pragma omp parallel firstprivate(e)
     {
-        double temp_vx = uniform_dist(e) * 2 * v_max - v_max;
-        double temp_x = uniform_dist(e) * L;
+        e.seed(chrono::system_clock::now().time_since_epoch().count() + omp_get_thread_num());
 
-        while(uniform_dist(e) * max_probability_density > Distribution(temp_x, temp_vx))
+        #pragma omp for
+        for(int i = 0; i < num; i++)
         {
-            temp_x = uniform_dist(e) * L;
-            temp_vx = uniform_dist(e) * 2 * v_max - v_max;
+            double temp_vx = uniform_dist(e) * 2 * v_max - v_max;
+            double temp_x = uniform_dist(e) * L;
+
+            while(uniform_dist(e) * max_probability_density > Distribution(temp_x, temp_vx))
+            {
+                temp_x = uniform_dist(e) * L;
+                temp_vx = uniform_dist(e) * 2 * v_max - v_max;
+            }
+            rv[i].x = temp_x;
+            rv[i].vx = temp_vx;
         }
-        rv[i].x = temp_x;
-        rv[i].vx = temp_vx;
     }
 
     cout << "Finish!" << endl;

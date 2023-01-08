@@ -12,6 +12,7 @@ class PlasmaSystem: public Input
   public:
     PoissonSolverPeriodicBC_FFTW E;
     VectorXd charge;
+    VectorXd charge_background;
 
     vector<double> Ek;
     vector<double> Ep;
@@ -31,7 +32,7 @@ class PlasmaSystem: public Input
 
     //Setup Charge
     void SetupSpeciesChargeOnGrids();
-    void SetupBackgroundChargeOnGrids();
+    void CalcBackgroundChargeOnGrids();
 
     //PhaseSpace LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng *r);
     void Run();

@@ -63,20 +63,21 @@ PlasmaSystem::PlasmaSystem():
     Ep.clear();
     Et.clear();
     charge.resize(nx_grids);
+    charge_background.resize(nx_grids);
 }
 
 //PhaseSpace PlasmaSystem::LangevinPusher(PhaseSpace last_rv, double gamma, double D, gsl_rng* r)
 //{
-    //int idx = floor(last_rv.x / dx);
-    //if (idx == nx_grids)
-    //idx = 0;
-    //D = gamma * T[idx] / m_i;
+//int idx = floor(last_rv.x / dx);
+//if (idx == nx_grids)
+//idx = 0;
+//D = gamma * T[idx] / m_i;
 
-    //double tempx = last_rv.x + last_rv.vx * dt;
-    //double tempv = last_rv.vx - gamma * last_rv.vx * dt + sqrt(D * dt ) * gsl_ran_gaussian(r, sqrt(2.0));
-    //PhaseSpace next_rv(tempx, tempv);
-    //return next_rv;
-    //return 0.0;
+//double tempx = last_rv.x + last_rv.vx * dt;
+//double tempv = last_rv.vx - gamma * last_rv.vx * dt + sqrt(D * dt ) * gsl_ran_gaussian(r, sqrt(2.0));
+//PhaseSpace next_rv(tempx, tempv);
+//return next_rv;
+//return 0.0;
 //}
 
 void PlasmaSystem::ExicteWave(double A, double k)
@@ -101,6 +102,7 @@ void PlasmaSystem::Run()
     Initialize();
     PrintParameters();
     PrintSpecialInformation();
+    CalcBackgroundChargeOnGrids();
 
     //main loop
     for(int n = 0; n < maxsteps + 1; n++)
@@ -129,19 +131,13 @@ void PlasmaSystem::Run()
         }
 
         //calculate E
-        charge.resize(nx_grids);
         charge.setZero();
         SetupSpeciesChargeOnGrids();
-        SetupBackgroundChargeOnGrids();
+        //add neutral background charge density
+        charge += charge_background;
         E.Solve(charge);
 
         //PushOneStep;
-        //struct timeb time_seed;
-        //ftime(&time_seed);
-        //gsl_rng_default_seed = (time_seed.time * 1000 + time_seed.millitm);
-        //gsl_rng *r;
-        //r = gsl_rng_alloc(gsl_rng_default);
-
         for(auto &particles_a : species)
         {
             #pragma omp parallel for
@@ -236,7 +232,7 @@ void PlasmaSystem::PrintParameters() const
 
 }
 
-void PlasmaSystem::SetupBackgroundChargeOnGrids()
+void PlasmaSystem::CalcBackgroundChargeOnGrids()
 {
     double net_charge = 0.0;
     for(auto p : species)
@@ -244,18 +240,20 @@ void PlasmaSystem::SetupBackgroundChargeOnGrids()
         net_charge += p.num * p.q;
     }
     double normalization = 0.0;
-    vector<double> rho(nx_grids, 0.0);
+    VectorXd temp_rho(nx_grids);
     for(int i = 0; i < nx_grids; i++)
     {
         double x = i * dx;
-        rho[i] = GetBackgroundDensity(x);
-        normalization += rho[i];
+        temp_rho[i] = GetBackgroundDensity(x);
+        normalization += temp_rho[i];
     }
-    for(int i = 0; i < nx_grids; i++)
-    {
-        rho[i] /= normalization;
-        charge[i] -= net_charge * rho[i] / dx;
-    }
+    //for(int i = 0; i < nx_grids; i++)
+    //{
+    //rho[i] /= normalization;
+    //charge[i] -= net_charge * rho[i] / dx;
+    //}
+    //charge -= net_charge * rho / dx / normalization;
+    charge_background = net_charge * temp_rho / dx / normalization;
 }
 
 void PlasmaSystem::SetupSpeciesChargeOnGrids()
