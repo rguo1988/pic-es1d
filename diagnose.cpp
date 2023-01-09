@@ -15,28 +15,6 @@ void OutputData(string filename, vector<double> a)
     }
     ofile.close();
 }
-void OutputElectricPotentialGrids(string filename, PoissonSolverPeriodicBC_FFTW efg)
-{
-    ofstream ofile;
-    ofile.open(filename.c_str());
-
-    for(int i = 0; i < efg.nx_grids; i++)
-    {
-        ofile << efg.GetPhi(i) << endl;
-    }
-    ofile.close();
-}
-void OutputElectricFieldGrids(string filename, PoissonSolverPeriodicBC_FFTW efg)
-{
-    ofstream ofile;
-    ofile.open(filename.c_str());
-
-    for(int i = 0; i < efg.nx_grids; i++)
-    {
-        ofile << efg.GetEx(i)<< endl;
-    }
-    ofile.close();
-}
 vector<double> GetParticlesVX(Particles testp)
 {
     vector<double> test;

@@ -26,7 +26,7 @@ class Input
 
     //speices
     static constexpr double m_e = 1.0;
-    static constexpr double NePerCell = 10000;
+    static constexpr double NePerCell = 5000;
     static constexpr double T_e = 1;
     const double N_e = NePerCell * nx_grids;
     const double n_e_aver = N_e / L;
@@ -35,7 +35,7 @@ class Input
     const double lambda_De = sqrt(T_e);
 
     static constexpr double m_i = 100.0;
-    static constexpr double NiPerCell = 10000;
+    static constexpr double NiPerCell = 5000;
     static constexpr double T_i = 1;
     const double N_i = NiPerCell * nx_grids;
     const double n_i_aver = N_i / L;
