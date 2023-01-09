@@ -125,8 +125,8 @@ void PlasmaSystem::Run()
                 string filenameV = data_path + particles_a.name + "v_data" + p;
                 string filenameX = data_path + particles_a.name + "x_data" + p;
                 //output particles x v
-                OutputData(filenameV, GetParticlesVX(particles_a));
-                OutputData(filenameX,  GetParticlesX(particles_a));
+                //OutputData(filenameV, GetParticlesVX(particles_a));
+                //OutputData(filenameX,  GetParticlesX(particles_a));
             }
         }
 

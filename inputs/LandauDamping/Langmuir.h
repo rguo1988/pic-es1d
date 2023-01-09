@@ -4,10 +4,6 @@
 #include"particles.h"
 #include<string>
 #include<iostream>
-#include<fstream>
-#include<iomanip>
-#include<gsl/gsl_rng.h>
-#include<sys/timeb.h>
 using namespace std;
 
 class Input
@@ -20,17 +16,17 @@ class Input
 
     //simulation box
     static constexpr double k = 0.5;
-    static constexpr double L = 2.0 * 2.0 * M_PI / k;
+    static constexpr double L = 2.0 * M_PI / k;
     const double v_max = 5.0;
     const double vx_width = 2.0 * v_max;
 
-    static const int nx = 401;
+    static const int nx = 201;
     static const int nx_grids = nx - 1;
     const double dx = L / nx_grids;
 
     //speices
     static constexpr double m_e = 1.0;
-    static constexpr double NePerCell = 2000;
+    static constexpr double NePerCell = 1000;
     static constexpr double T_e = 1;
     const double N_e = NePerCell * nx_grids;
     const double n_e_aver = N_e / L;
