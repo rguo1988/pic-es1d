@@ -1,7 +1,7 @@
 #include "poisson_solver.h"
 
-PoissonSolverPeriodicBC_FFTW::PoissonSolverPeriodicBC_FFTW(int _grids_num, double _grid_width):
-    L(_grids_num * _grid_width), nx_grids(_grids_num), dx(_grid_width){}
+PoissonSolverPeriodicBC_FFTW::PoissonSolverPeriodicBC_FFTW(int _nx, double _grid_width):
+    nx_grids(_nx - 1), dx(_grid_width), L((_nx - 1) * _grid_width) {}
 
 void PoissonSolverPeriodicBC_FFTW::Solve(VectorXd charge)
 {
@@ -79,4 +79,3 @@ double PoissonSolverPeriodicBC_FFTW::GetPhi(int x_idx)
 {
     return phi[x_idx];
 }
-

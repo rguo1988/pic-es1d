@@ -57,7 +57,7 @@ void PlasmaSystem::CalculateT()
     }
 }
 PlasmaSystem::PlasmaSystem():
-    E(nx_grids, dx)
+    E(nx, dx)
 {
     Ek.clear();
     Ep.clear();
