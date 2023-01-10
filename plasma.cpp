@@ -187,25 +187,36 @@ void PlasmaSystem::PrintParameters() const
     cout << "  1D ES PIC Simulation Start!" << endl;
     cout << "--------------------------------------------" << endl;
     cout << "  Simulation Parameters:" << endl;
-    cout << setw(13) << "  Length"
-         << setw(13) << "       k"
-         << setw(13) << "nx_grids"
-         << setw(13) << "Lambda_D"
-         << setw(13) << setprecision(6) << "      dx" << endl;
+    cout << "     L = " << left << setw(7) << setprecision(4)  << L
+         << "     k = " << left << setw(7) << k
+         << "    nx = " << left << setw(7) << nx
+         << "    dx = " << left << setw(7) << setprecision(4) << dx << endl;
 
-    cout << setw(13) << L
-         << setw(13) << k
-         << setw(13) << nx_grids
-         << setw(13) << lambda_D
-         << setw(13) << dx << endl;
+    cout << "   w_p = " << left << setw(7) << setprecision(4)  << w_pe
+         << "   l_D = " << left << setw(7) << lambda_D << endl;
 
-    cout << setw(13) << "MaxSteps"
-         << setw(13) << "      dt"
-         << setw(13) << "    Time" << endl;
+    cout << " Steps = " << left << setw(7) << maxsteps
+         << "    dt = " << left << setw(7)  << dt
+         << "  Time = " << left << setw(7)  << maxsteps*dt << endl;
+    //cout << setw(13) << "  Length"
+         //<< setw(13) << "       k"
+         //<< setw(13) << "nx_grids"
+         //<< setw(13) << "Lambda_D"
+         //<< setw(13) << setprecision(6) << "      dx" << endl;
 
-    cout << setw(13) << maxsteps
-         << setw(13) << dt
-         << setw(13) << maxsteps*dt << endl;
+    //cout << setw(13) << L
+         //<< setw(13) << k
+         //<< setw(13) << nx_grids
+         //<< setw(13) << lambda_D
+         //<< setw(13) << dx << endl;
+
+    //cout << setw(13) << "MaxSteps"
+         //<< setw(13) << "      dt"
+         //<< setw(13) << "    Time" << endl;
+
+    //cout << setw(13) << maxsteps
+         //<< setw(13) << dt
+         //<< setw(13) << maxsteps*dt << endl;
 
     cout << "--------------------------------------------" << endl;
     if(dx > lambda_D)
@@ -216,10 +227,14 @@ void PlasmaSystem::PrintParameters() const
     for(auto particles_a : species)
     {
         cout << "  Species: " << particles_a.name << endl;
-        cout  << setw(8) << "N = "  << particles_a.num
-              << setw(15) << "N/Cell = " << particles_a.num / nx_grids
-              << setw(8) << "q = " << setprecision(6) << particles_a.q
-              << setw(8) << "m = " << particles_a.m << endl;
+        //cout  << setw(8) << "N = "  << particles_a.num
+              //<< setw(15) << "N/Cell = " << particles_a.num / nx_grids
+              //<< setw(8) << "q = " << setprecision(6) << particles_a.q
+              //<< setw(8) << "m = " << particles_a.m << endl;
+        cout << "     m = " << left << setw(7) << particles_a.m
+             << "N/Cell = " << left << setw(7) << particles_a.num / nx_grids 
+             << "     N = " << left << setw(7) << particles_a.num
+             << "     q = " << left << setw(7) << setprecision(4) << particles_a.q << endl;
     }
     cout << "--------------------------------------------" << endl;
     cout << "  Data: " << endl;
