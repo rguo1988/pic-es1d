@@ -20,13 +20,13 @@ class Input
     const double v_max = 5.0;
     const double vx_width = 2.0 * v_max;
 
-    static const int nx = 2001;
+    static const int nx = 1001;
     static const int nx_grids = nx - 1;
     const double dx = L / nx_grids;
 
     //speices
     static constexpr double m_e = 1.0;
-    static constexpr double NePerCell = 10000;
+    static constexpr double NePerCell = 2000;
     static constexpr double T_e = 1;
     const double N_e = NePerCell * nx_grids;
     const double n_e_aver = N_e / L;
@@ -35,7 +35,7 @@ class Input
     const double lambda_De = sqrt(T_e);
 
     static constexpr double m_i = 100.0;
-    static constexpr double NiPerCell = 10000;
+    static constexpr double NiPerCell = 2000;
     static constexpr double T_i = 1;
     const double N_i = NiPerCell * nx_grids;
     const double n_i_aver = N_i / L;
@@ -105,10 +105,11 @@ class Input
     {
         Particles electrons(N_e, q_e, m_e, "electrons");
         Particles ions(N_i, q_i, m_i, "ions");
-        electrons.InitializeXV_Random(GetElecInitDistrib, v_max, L);
-        //electrons.InitializeXV_Quiet(GetElecXDistrib, GetElecVDistrib, L, dx, nx_grids);
-        ions.InitializeXV_Random(GetIonInitDistrib, v_max, L);
-        //ions.InitializeXV_Quiet(GetIonXDistrib, GetIonVDistrib, L, dx, nx_grids);
+        cout << "--------------------------------------------" << endl;
+        //electrons.InitializeXV_Random(GetElecInitDistrib, v_max, L);
+        electrons.InitializeXV_Quiet(GetElecXDistrib, GetElecVDistrib, L, dx, nx_grids);
+        //ions.InitializeXV_Random(GetIonInitDistrib, v_max, L);
+        ions.InitializeXV_Quiet(GetIonXDistrib, GetIonVDistrib, L, dx, nx_grids);
         species.push_back(electrons);
         species.push_back(ions);
     }

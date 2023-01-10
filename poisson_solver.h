@@ -18,7 +18,7 @@ class PoissonSolverPeriodicBC_FFTW
 
     PoissonSolverPeriodicBC_FFTW(int _nx, double _grid_width);
     void Solve(VectorXd _charge);
-    double GetEx(int x_idx);
+    double GetE(int x_idx);
     double GetPhi(int x_idx);
 };
 

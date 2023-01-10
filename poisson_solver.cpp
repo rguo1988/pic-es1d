@@ -71,7 +71,7 @@ void PoissonSolverPeriodicBC_FFTW::Solve(VectorXd charge)
     fftw_free(elec_pot_in_fourier_space);
     fftw_cleanup();
 }
-double PoissonSolverPeriodicBC_FFTW::GetEx(int x_idx)
+double PoissonSolverPeriodicBC_FFTW::GetE(int x_idx)
 {
     return Ex[x_idx];
 }

@@ -27,7 +27,7 @@ void PlasmaSystem::CalculateE()
     double tempEp = 0.0;
     for(int i = 0; i < nx_grids; i++)
     {
-        tempEp += 0.5 * pow(E.GetEx(i), 2) * dx;
+        tempEp += 0.5 * pow(E.GetE(i), 2) * dx;
     }
     tempEp /= particles_tot_num;
     Ep.push_back(tempEp);
@@ -147,7 +147,7 @@ void PlasmaSystem::Run()
                 double fex = 0.0;
                 for(auto g : partition_contrib)
                 {
-                    fex += particles_a.q * E.GetEx(g.first) * g.second * dx;
+                    fex += particles_a.q * E.GetE(g.first) * g.second * dx;
                 }
                 if(n == 0)
                 {

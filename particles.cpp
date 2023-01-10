@@ -23,7 +23,6 @@ Particles::Particles(double _n, double _q, double _m, string _name):
 }
 void Particles::InitializeXV_Random(double (*Distribution)(double, double), double v_max, double L)
 {
-    cout << "--------------------------------------------" << endl;
     cout << "  Initializing " << name << "...";
 
     //set random number
@@ -63,7 +62,6 @@ void Particles::InitializeXV_Quiet(double (*DistributionX)(double), double (*Dis
     double dv = 1e-7;
     bool minus_or_plus = 0;
 
-    cout << "--------------------------------------------" << endl;
     for(int i = 0; i < nx_grids; i++)
     {
         //print assigned process
