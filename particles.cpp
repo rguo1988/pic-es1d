@@ -8,18 +8,11 @@
 
 using namespace std;
 
-PhaseSpace::PhaseSpace(double X, double VX)
-{
-    x = X;
-    vx = VX;
-}
-PhaseSpace::~PhaseSpace(void)
-{}
-
 Particles::Particles(double _n, double _q, double _m, string _name):
     num(_n), q(_q),  m(_m), name(_name)
 {
-    rv.resize(num, 0.0);
+    x.resize(num, 0.0);
+    vx.resize(num, 0.0);
 }
 void Particles::InitializeXV_Random(double (*Distribution)(double, double), double v_max, double L)
 {
@@ -47,8 +40,8 @@ void Particles::InitializeXV_Random(double (*Distribution)(double, double), doub
                 temp_x = uniform_dist(e) * L;
                 temp_vx = uniform_dist(e) * 2 * v_max - v_max;
             }
-            rv[i].x = temp_x;
-            rv[i].vx = temp_vx;
+            x[i] = temp_x;
+            vx[i] = temp_vx;
         }
     }
 
@@ -72,7 +65,7 @@ void Particles::InitializeXV_Quiet(double (*DistributionX)(double), double (*Dis
         double temp_x = (i + 0.5) * dx;
         Nx[i] = round(1.0 * num / nx_grids * DistributionX(temp_x));
         for(int j = temp_N; j < temp_N + Nx[i]; j++)
-            rv[j].x = temp_x;
+            x[j] = temp_x;
         double u1 = 0.0;
         for(int k = temp_N; k < temp_N + Nx[i] / 2.0; k++)
         {
@@ -85,13 +78,13 @@ void Particles::InitializeXV_Quiet(double (*DistributionX)(double), double (*Dis
                     break;
             }
             double temp_v = u1 + 0.5 * l * dv;
-            rv[k].vx = temp_v;
+            vx[k] = temp_v;
             int k_inverse = 2 * temp_N + Nx[i] - 1 - k;
             if(k != k_inverse)
-                rv[k_inverse].vx = -temp_v;
+                vx[k_inverse] = -temp_v;
             else
             {
-                rv[k_inverse].vx = (minus_or_plus) ? -temp_v : temp_v;
+                vx[k_inverse] = (minus_or_plus) ? -temp_v : temp_v;
                 minus_or_plus = !minus_or_plus;
             }
             u1 += l * dv;

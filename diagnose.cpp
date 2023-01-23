@@ -1,7 +1,7 @@
-#include"diagnose.h"
-#include<iostream>
 #include<iomanip>
 #include<fstream>
+#include"diagnose.h"
+#include"plasma.h"
 
 using namespace std;
 
@@ -15,23 +15,41 @@ void OutputData(string filename, vector<double> a)
     }
     ofile.close();
 }
-vector<double> GetParticlesVX(Particles testp)
+
+void PlasmaSystem::DiagnoseDistribution(string p)
 {
-    vector<double> test;
-    test.clear();
-    for(auto i : testp.rv)
+
+    for(auto particles_a : species)
     {
-        test.push_back(i.vx);
+        string filenameVX = data_path + particles_a.name + "_vx_data" + p;
+        string filenameX = data_path + particles_a.name + "_x_data" + p;
+        //output particles x v
+        OutputData(filenameVX, particles_a.vx);
+        OutputData(filenameX,  particles_a.x);
     }
-    return test;
 }
-vector<double> GetParticlesX(Particles testp)
+
+void PlasmaSystem::DiagnoseEnergy()
 {
-    vector<double> test;
-    test.clear();
-    for(auto i : testp.rv)
+    double tempEk = 0.0;
+    int particles_tot_num = 0;
+    for (auto particles_a : species)
     {
-        test.push_back(i.x);
+        for(int i = 0; i < particles_a.num; i++)
+        {
+            tempEk += 0.5 * particles_a.m * pow(particles_a.vx[i], 2);
+        }
+        particles_tot_num += particles_a.num;
     }
-    return test;
+    tempEk /= particles_tot_num;
+    Ek.push_back(tempEk);
+
+    double tempEp = 0.0;
+    for(int i = 0; i < nx_grids; i++)
+    {
+        tempEp += 0.5 * pow(E.GetE(i), 2) * dx;
+    }
+    tempEp /= particles_tot_num;
+    Ep.push_back(tempEp);
+    Et.push_back(tempEk + tempEp);
 }

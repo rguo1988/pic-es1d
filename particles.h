@@ -4,15 +4,6 @@
 #include<string>
 using namespace std;
 
-class PhaseSpace
-{
-  public:
-    double x;
-    double vx;
-
-    PhaseSpace(double X = 0, double VX = 0);
-    ~PhaseSpace(void);
-};
 class Particles
 {
   public:
@@ -20,7 +11,8 @@ class Particles
     const double q;//alpha-particle charge
     const double m;//alpha-particle mass
     const string name;//alpha-particle name
-    vector<PhaseSpace> rv;
+    vector<double> x;
+    vector<double> vx;
 
     Particles(double N, double Q, double M, string name);
     void InitializeXV_Random(double (*Distribution)(double, double), double v_max, double L);

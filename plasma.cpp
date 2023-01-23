@@ -9,31 +9,7 @@
 
 using namespace std;
 
-void PlasmaSystem::CalculateE()
-{
-    double tempEk = 0.0;
-    int particles_tot_num = 0;
-    for (auto particles_a : species)
-    {
-        for(auto prv : particles_a.rv)
-        {
-            tempEk += 0.5 * particles_a.m * (prv.vx * prv.vx);
-        }
-        particles_tot_num += particles_a.num;
-    }
-    tempEk /= particles_tot_num;
-    Ek.push_back(tempEk);
-
-    double tempEp = 0.0;
-    for(int i = 0; i < nx_grids; i++)
-    {
-        tempEp += 0.5 * pow(E.GetE(i), 2) * dx;
-    }
-    tempEp /= particles_tot_num;
-    Ep.push_back(tempEp);
-    Et.push_back(tempEk + tempEp);
-}
-void PlasmaSystem::CalculateT()
+void PlasmaSystem::DiagnoseTemperature()
 {
     T.clear();
     T.resize(nx_grids, 0.0);
@@ -42,12 +18,12 @@ void PlasmaSystem::CalculateT()
 
     for (auto particles_a : species)
     {
-        for(auto prv : particles_a.rv)
+        for(int i = 0; i < particles_a.num; i++)
         {
-            int idx_grid = floor(prv.x / dx);
+            int idx_grid = floor(particles_a.x[i] / dx);
             if (idx_grid == nx_grids)
                 idx_grid = 0;
-            T[idx_grid] += particles_a.m * (prv.vx * prv.vx);
+            T[idx_grid] += particles_a.m * pow(particles_a.vx[i], 2);
             num_in_grid[idx_grid]++;
         }
     }
@@ -84,12 +60,12 @@ void PlasmaSystem::ExicteWave(double A, double k)
 {
     for(int i = 0; i < species[0].num; i++)
     {
-        double xplus = A * cos(k * species[0].rv[i].x);
-        species[0].rv[i].x += xplus;
-        while(species[0].rv[i].x < 0.0)
-            species[0].rv[i].x += L;
-        while(species[0].rv[i].x >= L)
-            species[0].rv[i].x -= L;
+        double xplus = A * cos(k * species[0].x[i]);
+        species[0].x[i] += xplus;
+        while(species[0].x[i] < 0.0)
+            species[0].x[i] += L;
+        while(species[0].x[i] >= L)
+            species[0].x[i] -= L;
     }
     cout << "Wave is Excited!" << endl
          << "A= " << A
@@ -101,13 +77,12 @@ void PlasmaSystem::Run()
 {
     Initialize();
     PrintParameters();
-    PrintSpecialInformation();
     CalcBackgroundChargeOnGrids();
 
     //main loop
     for(int n = 0; n < maxsteps + 1; n++)
     {
-        CalculateT();
+        DiagnoseTemperature();
         int percent = 100 * n / (maxsteps);
         //print running process
         if(percent % 5 == 0)
@@ -119,15 +94,7 @@ void PlasmaSystem::Run()
         if(n % data_steps == 0)
         {
             string p = to_string(n / data_steps);
-
-            for(auto particles_a : species)
-            {
-                string filenameV = data_path + particles_a.name + "v_data" + p;
-                string filenameX = data_path + particles_a.name + "x_data" + p;
-                //output particles x v
-                //OutputData(filenameV, GetParticlesVX(particles_a));
-                //OutputData(filenameX,  GetParticlesX(particles_a));
-            }
+            DiagnoseDistribution(p);
         }
 
         //calculate E
@@ -143,7 +110,7 @@ void PlasmaSystem::Run()
             #pragma omp parallel for
             for(int j = 0; j < particles_a.num; j++)
             {
-                map<int, double> partition_contrib = PartitionToGrid(dx, nx_grids, particles_a.rv[j].x, 2); //linear interpolation //ec scheme
+                map<int, double> partition_contrib = PartitionToGrid(dx, nx_grids, particles_a.x[j], 2); //linear interpolation //ec scheme
                 double fex = 0.0;
                 for(auto g : partition_contrib)
                 {
@@ -151,27 +118,26 @@ void PlasmaSystem::Run()
                 }
                 if(n == 0)
                 {
-                    particles_a.rv[j].vx += 0.5 * fex * dt / particles_a.m;
-                    particles_a.rv[j].x += particles_a.rv[j].vx * dt;
+                    particles_a.vx[j] += 0.5 * fex * dt / particles_a.m;
+                    particles_a.x[j]  += particles_a.vx[j] * dt;
                 }
                 else
                 {
-                    particles_a.rv[j].vx += fex * dt / particles_a.m;
-                    particles_a.rv[j].x += particles_a.rv[j].vx * dt;
-                    //particles_a.rv[j] = LangevinPusher(particles_a.rv[j], gamma, D, r);
+                    particles_a.vx[j] += fex * dt / particles_a.m;
+                    particles_a.x[j]  += particles_a.vx[j] * dt;
                 }
                 //period condition
-                while(particles_a.rv[j].x < 0.0)
+                while(particles_a.x[j] < 0.0)
                 {
-                    particles_a.rv[j].x += L;
+                    particles_a.x[j] += L;
                 }
-                while(particles_a.rv[j].x >= L)
+                while(particles_a.x[j] >= L)
                 {
-                    particles_a.rv[j].x -= L;
+                    particles_a.x[j] -= L;
                 }
             }
         }
-        CalculateE();
+        DiagnoseEnergy();
     }
     //output energy evolution
     OutputData(data_path + "/tot_energy", Et);
@@ -181,11 +147,11 @@ void PlasmaSystem::Run()
     cout << endl << "  Complete!" << endl;
 }
 
-void PlasmaSystem::PrintParameters() const
+void PlasmaSystem::PrintParameters()
 {
-    cout << "--------------------------------------------" << endl;
+    cout << "----------------------------------------------------------------------" << endl;
     cout << "  1D ES PIC Simulation Start!" << endl;
-    cout << "--------------------------------------------" << endl;
+    cout << "----------------------------------------------------------------------" << endl;
     cout << "  Simulation Parameters:" << endl;
     cout << "     L = " << left << setw(7) << setprecision(4)  << L
          << "     k = " << left << setw(7) << k
@@ -198,53 +164,32 @@ void PlasmaSystem::PrintParameters() const
     cout << " Steps = " << left << setw(7) << maxsteps
          << "    dt = " << left << setw(7)  << dt
          << "  Time = " << left << setw(7)  << maxsteps*dt << endl;
-    //cout << setw(13) << "  Length"
-         //<< setw(13) << "       k"
-         //<< setw(13) << "nx_grids"
-         //<< setw(13) << "Lambda_D"
-         //<< setw(13) << setprecision(6) << "      dx" << endl;
-
-    //cout << setw(13) << L
-         //<< setw(13) << k
-         //<< setw(13) << nx_grids
-         //<< setw(13) << lambda_D
-         //<< setw(13) << dx << endl;
-
-    //cout << setw(13) << "MaxSteps"
-         //<< setw(13) << "      dt"
-         //<< setw(13) << "    Time" << endl;
-
-    //cout << setw(13) << maxsteps
-         //<< setw(13) << dt
-         //<< setw(13) << maxsteps*dt << endl;
-
-    cout << "--------------------------------------------" << endl;
+    cout << "----------------------------------------------------------------------" << endl;
     if(dx > lambda_D)
     {
         cout << "WARNING: DebyeL is NOT satisfied!" << endl;
-        cout << "--------------------------------------------" << endl;
+        cout << "----------------------------------------------------------------------" << endl;
     }
     for(auto particles_a : species)
     {
         cout << "  Species: " << particles_a.name << endl;
-        //cout  << setw(8) << "N = "  << particles_a.num
-              //<< setw(15) << "N/Cell = " << particles_a.num / nx_grids
-              //<< setw(8) << "q = " << setprecision(6) << particles_a.q
-              //<< setw(8) << "m = " << particles_a.m << endl;
         cout << "     m = " << left << setw(7) << particles_a.m
-             << "N/Cell = " << left << setw(7) << particles_a.num / nx_grids 
+             << "N/Cell = " << left << setw(7) << particles_a.num / nx_grids
              << "     N = " << left << setw(7) << particles_a.num
              << "     q = " << left << setw(7) << setprecision(4) << particles_a.q << endl;
     }
-    cout << "--------------------------------------------" << endl;
+    cout << "----------------------------------------------------------------------" << endl;
+
+    // print special information in this experiment
+    PrintSpecialInformation();
+
     cout << "  Data: " << endl;
     if(!if_continued)
         cout << "  Evolving from a NEW initial state!" << endl;
     else
         cout << "  Evolving from a CONTINUED state!" << endl;
     cout << "  data_num = " << data_num << endl;
-    cout << "--------------------------------------------" << endl;
-
+    cout << "----------------------------------------------------------------------" << endl;
 }
 
 void PlasmaSystem::CalcBackgroundChargeOnGrids()
@@ -262,12 +207,6 @@ void PlasmaSystem::CalcBackgroundChargeOnGrids()
         temp_rho[i] = GetBackgroundDensity(x);
         normalization += temp_rho[i];
     }
-    //for(int i = 0; i < nx_grids; i++)
-    //{
-    //rho[i] /= normalization;
-    //charge[i] -= net_charge * rho[i] / dx;
-    //}
-    //charge -= net_charge * rho / dx / normalization;
     charge_background = net_charge * temp_rho / dx / normalization;
 }
 
@@ -278,7 +217,7 @@ void PlasmaSystem::SetupSpeciesChargeOnGrids()
     {
         for(int i = 0; i < p.num; i++)
         {
-            map<int, double> partition_contrib = PartitionToGrid(dx, nx_grids, p.rv[i].x, 2); //interpolation
+            map<int, double> partition_contrib = PartitionToGrid(dx, nx_grids, p.x[i], 2); //interpolation
             for(auto g : partition_contrib)
             {
                 charge[g.first] += p.q * g.second;// / pow(gridWidth, 1);

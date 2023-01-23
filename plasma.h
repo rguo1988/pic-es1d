@@ -23,12 +23,13 @@ class PlasmaSystem: public Input
     PlasmaSystem();
 
     //print important parameters in simulation
-    void PrintParameters() const;
+    void PrintParameters();
 
-    //trace energy during simulation
-    void CalculateE();
+    //diagnose
+    void DiagnoseEnergy();
     //calculate the temperature in every cell
-    void CalculateT();
+    void DiagnoseTemperature();
+    void DiagnoseDistribution(string p);
 
     //Setup Charge
     void SetupSpeciesChargeOnGrids();
