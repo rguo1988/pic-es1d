@@ -17,6 +17,6 @@ int main()
     auto stop_time = chrono::high_resolution_clock::now();
     auto using_time = chrono::duration_cast<chrono::seconds>(stop_time - start_time).count();
     cout << "  Using Time: " << using_time << "s" << endl;
-    cout << "--------------------------------------------" << endl;
+    cout << "----------------------------------------------------------------------" << endl;
     return 0;
 }

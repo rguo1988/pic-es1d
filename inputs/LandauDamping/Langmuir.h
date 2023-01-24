@@ -63,9 +63,7 @@ class Input
     //}
     static double GetElecXDistrib(double x)
     {
-        double ue = 1.0 + d * cos(k * x);
-        return ue;
-        //return 1.0;
+        return 1.0;
     }
     static double GetElecVDistrib(double v)
     {
@@ -82,13 +80,22 @@ class Input
         Particles electrons(N_e, q_e, m_e, "electrons");
         //electrons.InitializeXV_Random(GetElecInitDistrib, v_max, L);
         electrons.InitializeXV_Quiet(GetElecXDistrib, GetElecVDistrib, L, dx, nx_grids);
+        for(int i = 0; i < electrons.num; i++)
+        {
+            electrons.x[i] += d * cos(k * electrons.x[i]);
+            //apply periodic boundary conditions
+            if(electrons.x[i] > L)
+                electrons.x[i] -= L;
+            if(electrons.x[i] < 0)
+                electrons.x[i] += L;
+        }
         species.push_back(electrons);
     }
     void PrintSpecialInformation()
     {
         cout << "  " << title << endl;
         cout << "  " << "d = " << d << endl;
-        cout << "--------------------------------------------" << endl;
+        cout << "----------------------------------------------------------------------" << endl;
     }
 };
 
