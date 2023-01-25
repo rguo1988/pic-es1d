@@ -175,8 +175,9 @@ void PlasmaSystem::PrintParameters()
         cout << "  Species: " << particles_a.name << endl;
         cout << "     m = " << left << setw(7) << particles_a.m
              << "N/Cell = " << left << setw(7) << particles_a.num / nx_grids
-             << "     N = " << left << setw(7) << particles_a.num
+             << "     T = " << left << setw(7) << particles_a.T
              << "     q = " << left << setw(7) << setprecision(4) << particles_a.q << endl;
+        cout << "     N = " << left << setw(7) << particles_a.num << endl;
     }
     cout << "----------------------------------------------------------------------" << endl;
 

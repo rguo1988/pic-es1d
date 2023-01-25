@@ -78,7 +78,7 @@ class Input
 
     void Initialize()
     {
-        Particles ions(N_i, q_i, m_i, "ions");
+        Particles ions(N_i, q_i, m_i, T_i, "ions");
         cout << "----------------------------------------------------------------------" << endl;
         ions.InitializeXV_Random(GetIonInitDistrib, v_max, L);
         for(int i = 0; i < ions.num; i++)

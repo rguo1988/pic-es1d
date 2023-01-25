@@ -8,8 +8,8 @@
 
 using namespace std;
 
-Particles::Particles(double _n, double _q, double _m, string _name):
-    num(_n), q(_q),  m(_m), name(_name)
+Particles::Particles(double _n, double _q, double _m, double _T, string _name):
+    num(_n), q(_q),  m(_m), T(_T), name(_name)
 {
     x.resize(num, 0.0);
     vx.resize(num, 0.0);
