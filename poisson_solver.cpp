@@ -1,24 +1,29 @@
 #include "poisson_solver.h"
 
 PoissonSolverPeriodicBC_FFTW::PoissonSolverPeriodicBC_FFTW(int _nx, double _grid_width):
-    nx_grids(_nx - 1), dx(_grid_width), L((_nx - 1) * _grid_width) {}
+    nx_grids(_nx - 1), dx(_grid_width), L((_nx - 1) * _grid_width)
+{
+
+    phi.resize(nx_grids);
+    Ex.resize(nx_grids);
+}
 
 void PoissonSolverPeriodicBC_FFTW::Solve(VectorXd charge)
 {
     //charge density in grids and Fourier space
     fftw_complex *charge_dens_grid_fft;
-    charge_dens_grid_fft = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * pow(nx_grids, 1));
+    charge_dens_grid_fft = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * nx_grids);
     fftw_complex *char_dens_in_fourier_space;
-    char_dens_in_fourier_space = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * pow(nx_grids, 1));
+    char_dens_in_fourier_space = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * nx_grids);
 
     //electric potential in grids and Fourier space
     fftw_complex *elec_pot_grid_fft;//electric potential
-    elec_pot_grid_fft = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * pow(nx_grids, 1));
+    elec_pot_grid_fft = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * nx_grids);
     fftw_complex *elec_pot_in_fourier_space;
-    elec_pot_in_fourier_space = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * pow(nx_grids, 1));
+    elec_pot_in_fourier_space = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * nx_grids);
 
     //input charge_dens_grid_fft
-    for(int i = 0; i < pow(nx_grids, 1); i++)
+    for(int i = 0; i < nx_grids; i++)
     {
         charge_dens_grid_fft[i][0] = charge[i];
         charge_dens_grid_fft[i][1] = 0;
@@ -39,8 +44,8 @@ void PoissonSolverPeriodicBC_FFTW::Solve(VectorXd charge)
         double delta = k * dx / 2.0;
         double s = pow( sin(delta) / delta, 2);
         double as = k * k * s;
-        elec_pot_in_fourier_space[j][0] = char_dens_in_fourier_space[j][0] /  as / pow(nx_grids, 1);
-        elec_pot_in_fourier_space[j][1] = char_dens_in_fourier_space[j][1] /  as / pow(nx_grids, 1);
+        elec_pot_in_fourier_space[j][0] = char_dens_in_fourier_space[j][0] /  as / nx_grids;
+        elec_pot_in_fourier_space[j][1] = char_dens_in_fourier_space[j][1] /  as / nx_grids;
     }
 
     //perform inverse FFT to derive potential
@@ -48,10 +53,8 @@ void PoissonSolverPeriodicBC_FFTW::Solve(VectorXd charge)
     p_backward = fftw_plan_dft_1d(nx_grids, elec_pot_in_fourier_space, elec_pot_grid_fft, FFTW_BACKWARD, FFTW_ESTIMATE);
     fftw_execute(p_backward);
 
-    phi.resize(nx_grids);
-    Ex.resize(nx_grids);
     //transform 1d elec_pot_fft to elec_pot_grid
-    for(int k = 0; k < pow(nx_grids, 1); k++)
+    for(int k = 0; k < nx_grids; k++)
     {
         phi[k] = elec_pot_grid_fft[k][0];
     }

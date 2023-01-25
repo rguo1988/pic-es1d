@@ -204,7 +204,8 @@ void PlasmaSystem::CalcBackgroundChargeOnGrids()
     for(int i = 0; i < nx_grids; i++)
     {
         double x = i * dx;
-        temp_rho[i] = GetBackgroundDensity(x);
+        temp_rho[i] = GetBackgroundDensity(x, E.phi[i]);
+        // temp_rho[i] = GetBackgroundDensity(x);
         normalization += temp_rho[i];
     }
     charge_background = net_charge * temp_rho / dx / normalization;
